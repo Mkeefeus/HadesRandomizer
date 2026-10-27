@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
     	<AssemblyName>Hades Randomizer</AssemblyName>
     	<OutputType>WinExe</OutputType>
@@ -17,6 +17,7 @@
 			<UseAppHost>true</UseAppHost>
 
     	<ApplicationIcon>Resources\Assets\Hades.ico</ApplicationIcon>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -32,6 +33,12 @@
     	</Content>
 
     	<Content Include="oo2core_6_win64.dll">
+        	<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        	<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        	<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    	</Content>
+
+    	<Content Include="libzstd.dll">
         	<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         	<CopyToPublishDirectory>Always</CopyToPublishDirectory>
         	<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
