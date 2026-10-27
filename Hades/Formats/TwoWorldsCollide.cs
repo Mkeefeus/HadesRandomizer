@@ -18,7 +18,8 @@ class TwoWorldsCollide : IRandomizerFormat
     public void Exec(
         string baseSeed,
         Action<string>? statusCallback = null,
-        Action<string>? seedCallback = null
+        Action<string>? seedCallback = null,
+        IRandomizerOptions? options = null
     )
     {
         try
@@ -156,7 +157,8 @@ class TwoWorldsCollide : IRandomizerFormat
             // Class Weapons + deficit description (WeaponName (-X) with 2H Str buff)
             StartingClassService.RandomizeAllStartingWeaponsWithDescriptions(
                 editor,
-                baseSeed + "_classweapons"
+                baseSeed + "_classweapons",
+                Id
             );
 
             // Twin Maiden Shop
@@ -227,24 +229,68 @@ class TwoWorldsCollide : IRandomizerFormat
         }
     }
 
-    public int StatRandomizer(string seed)
+    public StartingStats StatRandomizer(string className, string seed)
     {
-        const double mean = 15.0;
-        const double stdDev = 5.0;
+        static int GenerateStat(string seed, int min, int max, double mean, double stdDev)
+        {
+            const int maxAttempts = 300;
+            for (var attempt = 0; ; attempt++)
+            {
+                var s = seed + "_stat" + attempt;
+
+                var u1 = (Utils.RandoUtils.GetRandomNumber(s + "_u1", 10000) + 1) / 10001.0;
+                var u2 = Utils.RandoUtils.GetRandomNumber(s + "_u2", 10000) / 10000.0;
+
+                var z = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
+                var stat = (int)Math.Round(mean + stdDev * z);
+
+                if (stat >= min && stat <= max)
+                    return stat;
+                if (attempt >= maxAttempts)
+                    throw new Exception("Failed to generate stats, attempt maximum reached.");
+            }
+        }
+
+        int total = 120;
+        int statMin = 8;
+        int statMax = 23;
+        double mean = 15.0;
+        double stdDev = 5.0;
+        const int maxAttempts = 300;
+
+        string[] keys = { "vigor", "mind", "end", "str", "dex", "int", "fai", "arc" };
+        int[] stats = new int[keys.Length];
+
 
         for (var attempt = 0; ; attempt++)
         {
-            var s = seed + "_stat" + attempt;
-
-            var u1 = (Utils.RandoUtils.GetRandomNumber(s + "_u1", 10000) + 1) / 10001.0;
-            var u2 = Utils.RandoUtils.GetRandomNumber(s + "_u2", 10000) / 10000.0;
-
-            var z = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
-            var stat = (int)Math.Round(mean + stdDev * z);
-
-            if (stat >= 8 && stat <= 23)
-                return stat;
+            var sum = 0;
+            for (var i = 0; i < keys.Length; i++)
+            {
+                string classedSeed = $"{seed}_{className}_{keys[i]}_{attempt}";
+                stats[i] = GenerateStat(classedSeed, statMin, statMax, mean, stdDev);
+                sum += stats[i];
+            }
+            if (sum == total)
+                break;
+            if (attempt >= maxAttempts)
+                throw new Exception("Failed to generate stats, attempt maximum reached.");
         }
+
+        int vigorMod = 5;
+        int mindMod = 5;
+
+        return new StartingStats
+        {
+            Vigor = stats[0] + vigorMod,
+            Mind = stats[1] - mindMod,
+            Endurance = stats[2],
+            Strength = stats[3],
+            Dexterity = stats[4],
+            Intelligence = stats[5],
+            Faith = stats[6],
+            Arcane = stats[7],
+        };
     }
 
     private void randomizeClasses(ParamsEditor editor, ClassArmorResults results)

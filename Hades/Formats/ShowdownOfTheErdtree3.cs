@@ -17,7 +17,8 @@ class ShowdownOfTheErdtree3 : IRandomizerFormat
     public void Exec(
         string baseSeed,
         Action<string>? statusCallback = null,
-        Action<string>? seedCallback = null
+        Action<string>? seedCallback = null,
+        IRandomizerOptions? options = null
     )
     {
         try
