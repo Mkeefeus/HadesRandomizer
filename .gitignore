@@ -374,3 +374,9 @@ FodyWeavers.xsd
 .stfolder/
 .stignore
 .stglobalignore
+
+ESDStudioProject.toml
+
+.smithbox/
+
+*.bin.prev
