@@ -220,7 +220,7 @@ class TwoWorldsCollide : IRandomizerFormat
                 if (stat >= min && stat <= max)
                     return stat;
                 if (attempt >= maxAttempts)
-                    throw new Exception("Failed to generate stats, attempt maximum reached.");
+                    throw new RandomizerException("Failed to generate stats, attempt maximum reached.");
             }
         }
 
@@ -247,7 +247,7 @@ class TwoWorldsCollide : IRandomizerFormat
             if (sum == total)
                 break;
             if (attempt >= maxAttempts)
-                throw new Exception("Failed to generate stats, attempt maximum reached.");
+                throw new RandomizerException("Failed to generate stats, attempt maximum reached.");
         }
 
         int vigorMod = 5;
