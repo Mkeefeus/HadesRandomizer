@@ -369,3 +369,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Syncthing
+.stfolder/
+.stignore
+.stglobalignore
+
+ESDStudioProject.toml
+
+.smithbox/
+
+*.bin.prev
