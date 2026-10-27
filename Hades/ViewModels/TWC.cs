@@ -1,3 +1,5 @@
+using Hades.Formats;
+
 namespace Hades.ViewModels;
 
-public class TwoWorldsCollideViewModel : FormatViewModelBase;
+public class TwoWorldsCollideViewModel(IRandomizerFormat format) : FormatViewModelBase(format);
