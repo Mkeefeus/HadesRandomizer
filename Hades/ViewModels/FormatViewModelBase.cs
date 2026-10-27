@@ -19,7 +19,6 @@ public abstract class FormatViewModelBase : ObservableObject
     }
 
     public string Title { get; }
-
     private string _seed = "";
     public string Seed
     {
@@ -52,6 +51,29 @@ public abstract class FormatViewModelBase : ObservableObject
     // current property values; it is read once per run, on the UI thread, before the format starts.
     protected virtual IRandomizerOptions? Options => null;
 
+    private void HandleException(Exception ex)
+    {
+        var isRandomizerException = ex is RandomizerException;
+        var exceptionToLog = isRandomizerException ? ex.InnerException : ex;
+        if (exceptionToLog != null)
+        {
+            try
+            {
+                File.AppendAllText("Hades.crash.log", $"[{DateTime.Now}] {_format.Id} crash: {(isRandomizerException ? $"{ex.Message}. " : "")}{exceptionToLog}\n");
+            }
+            catch { }
+        }
+        var statusTitle = isRandomizerException ? "Randomization Failed" : "Hades Crashed";
+        StatusText = $"{statusTitle}: {ex.Message}{(exceptionToLog != null ? "." : $" See {Path.GetFullPath("Hades.crash.log")} for details.")}";
+        MessageBox.Show(
+            Application.Current.MainWindow,
+            $"{StatusText}",
+            statusTitle,
+            MessageBoxButton.OK,
+            isRandomizerException ? MessageBoxImage.Warning : MessageBoxImage.Error
+        );
+    }
+
     private async Task RandomizeAsync()
     {
         // Snapshot inputs on the UI thread so edits made while the format runs don't affect it.
@@ -69,18 +91,7 @@ public abstract class FormatViewModelBase : ObservableObject
         }
         catch (Exception ex)
         {
-            try
-            {
-                File.AppendAllText("Hades.crash.log", $"[{DateTime.Now}] {_format.Id} crash: {ex}\n");
-            }
-            catch { }
-            StatusText = $"crashed: {ex.Message}";
-            MessageBox.Show(
-                $"{Title} randomization crashed:\n{ex.Message}\n\nCheck Hades.crash.log for details.\n\n{ex}",
-                "Hades Crash",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
+            HandleException(ex);
         }
         finally
         {
