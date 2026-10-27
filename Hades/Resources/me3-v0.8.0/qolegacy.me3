@@ -1,0 +1,13 @@
+profileVersion = "v1"
+savefile = "qolegacy"
+
+[[supports]]
+game = "eldenring"
+
+[[package]]
+id = "hades-qolegacy"
+path = "qolegacy/bingo"
+
+[[natives]]
+path = 'randomizer-helper/RandomizerHelper.dll'
+

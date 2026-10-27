@@ -21,6 +21,10 @@
             <views:TwoWorldsCollideView />
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModels:QOLegacyViewModel}">
+            <views:QOLegacyView />
+        </DataTemplate>
+
     </Window.Resources>
 
     <Grid>

@@ -10,11 +10,13 @@ public static class FormatRegistry
     {
         var sote3 = new ShowdownOfTheErdtree3();
         var twc = new TwoWorldsCollide();
+        var qoLegacy = new QOLegacy();
 
         return new FormatEntry[]
         {
             new FormatEntry(sote3, new ShowdownOfTheErdtree3ViewModel(sote3)),
             new FormatEntry(twc, new TwoWorldsCollideViewModel(twc)),
+            new FormatEntry(qoLegacy, new QOLegacyViewModel(qoLegacy)),
         };
     }
 }
