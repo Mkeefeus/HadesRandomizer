@@ -380,3 +380,7 @@ ESDStudioProject.toml
 .smithbox/
 
 *.bin.prev
+
+*.js
+*.dcx.bak
+project.json
