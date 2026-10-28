@@ -64,7 +64,7 @@ public abstract class FormatViewModelBase : ObservableObject
             catch { }
         }
         var statusTitle = isRandomizerException ? "Randomization Failed" : "Hades Crashed";
-        StatusText = $"{statusTitle}: {ex.Message}{(exceptionToLog != null ? "." : $" See {Path.GetFullPath("Hades.crash.log")} for details.")}";
+        StatusText = $"{statusTitle}: {ex.Message}{(exceptionToLog != null ? "." : $"\n\nSee {Path.GetFullPath("Hades.crash.log")} for details.")}";
         MessageBox.Show(
             Application.Current.MainWindow,
             $"{StatusText}",
