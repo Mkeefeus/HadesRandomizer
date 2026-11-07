@@ -159,6 +159,21 @@ public partial class ParamsEditor
         }
     }
 
+    private Param? _equipMtrlSet;
+    private Dictionary<int, int> _idToRowIndexEquipMtrlSet;
+    public Param EquipMtrlSet
+    {
+        get
+        {
+            if (_equipMtrlSet == null)
+            {
+                _idToRowIndexEquipMtrlSet = new();
+                _equipMtrlSet = initParamFromBnd(EquipMtrlSetParam, EquipMtrlSetParamDef, _idToRowIndexEquipMtrlSet);
+            }
+            return _equipMtrlSet;
+        }
+    }
+
     // only has 1 row: doesn't need a paramID:rowIndex dictionary
     private Param? _gameSystemCommon;
     public Param GameSystemCommon
@@ -204,6 +219,9 @@ public partial class ParamsEditor
 
     public const string BonfireWarpParam = "BonfireWarpParam.param";
     public const string BonfireWarpParamDef = "BonfireWarpParam";
+
+    public const string EquipMtrlSetParam = "EquipMtrlSetParam.param";
+    public const string EquipMtrlSetParamDef = "EquipMtrlSetParam";
 
     private ParamsEditor(string regulationPath)
     {
@@ -394,6 +412,14 @@ public partial class ParamsEditor
                         if (_gameSystemCommon != null)
                         {
                             file.Bytes = _gameSystemCommon.Write();
+                        }
+                        break;
+                    }
+                case EquipMtrlSetParam:
+                    {
+                        if (_equipMtrlSet != null)
+                        {
+                            file.Bytes = _equipMtrlSet.Write();
                         }
                         break;
                     }
